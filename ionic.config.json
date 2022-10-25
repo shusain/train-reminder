@@ -1,0 +1,8 @@
+{
+  "name": "Train Reminder",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue",
+  "id": "7720a1d4"
+}
