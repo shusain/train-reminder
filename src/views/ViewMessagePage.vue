@@ -25,7 +25,7 @@
       <div class="ion-padding">
         <h1>{{ message.subject }}</h1>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+          Nice lets see how live is this thing? yoyo ma {{position}}
         </p>
       </div>
     </ion-content>
@@ -38,7 +38,8 @@ import { IonBackButton, IonButtons, IonContent, IonHeader, IonIcon, IonItem, Ion
 import { personCircle } from 'ionicons/icons';
 import { getMessage } from '../data/messages';
 import { defineComponent } from 'vue';
-
+import { Geolocation } from '@capacitor/geolocation';
+const origPosition:any = {}
 export default defineComponent({
   name: 'ViewMessagePage',
   data() {
@@ -48,13 +49,16 @@ export default defineComponent({
         const win = window as any;
         const mode = win && win.Ionic && win.Ionic.mode;
         return mode === 'ios' ? 'Inbox' : '';
-      }
+      },
+      position: origPosition
     }
+  },
+  created: async function(){
+      this.$data.position = (await Geolocation.getCurrentPosition()).coords.latitude
   },
   setup() {
     const route = useRoute();
     const message = getMessage(parseInt(route.params.id as string, 10));
-
     return { message }
   },
   components: {

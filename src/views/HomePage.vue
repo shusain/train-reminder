@@ -29,6 +29,7 @@ import { IonContent, IonHeader, IonList, IonPage, IonRefresher, IonRefresherCont
 import MessageListItem from '@/components/MessageListItem.vue';
 import { defineComponent } from 'vue';
 import { getMessages } from '@/data/messages';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 export default defineComponent({
   name: 'HomePage',
@@ -41,6 +42,7 @@ export default defineComponent({
     refresh: (ev: CustomEvent) => {
       setTimeout(() => {
         ev.detail.complete();
+        Haptics.vibrate()
       }, 3000);
     }
   },
