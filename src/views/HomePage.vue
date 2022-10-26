@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header :translucent="true">
       <ion-toolbar>
-        <ion-title>Inbox</ion-title>
+        <ion-title>Train List</ion-title>
       </ion-toolbar>
     </ion-header>
     
@@ -18,7 +18,7 @@
       </ion-header>
       
       <ion-list>
-        <MessageListItem v-for="message in messages" :key="message.id" :message="message" />
+        <MessageListItem v-for="message in mappedTrainData" :key="message.id" :message="message" />
       </ion-list>
     </ion-content>
   </ion-page>
@@ -30,12 +30,17 @@ import MessageListItem from '@/components/MessageListItem.vue';
 import { defineComponent } from 'vue';
 import { getMessages } from '@/data/messages';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { getMappedTrainData } from '@/data/trainData'
+
+
+
 
 export default defineComponent({
   name: 'HomePage',
   data() {
     return {
-      messages: getMessages()
+      messages: getMessages(),
+      mappedTrainData: getMappedTrainData()
     }
   },
   methods: {

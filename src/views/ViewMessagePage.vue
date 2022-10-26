@@ -9,34 +9,27 @@
     </ion-header>
     
     <ion-content :fullscreen="true" v-if="message">
-      <ion-item>
-        <ion-icon :icon="personCircle" color="primary"></ion-icon>
-        <ion-label class="ion-text-wrap">
-          <h2>
-            {{ message.fromName }}
-            <span class="date">
-              <ion-note>{{ message.date }}</ion-note>
-            </span>
-          </h2>
-          <h3>To: <ion-note>Me</ion-note></h3>
-        </ion-label>
-      </ion-item>
+      <!-- AIzaSyBdjdsCuQpY4pxUzwYKLRaAIVchevRT42Q -->
+      <iframe v-if="location && location.lat"
+        onload="this.width=screen.width;this.height=screen.height;"
+        width="450"
+        height="250"
+        frameborder="0" style="border:0"
+        referrerpolicy="no-referrer-when-downgrade"
+        :src="'https://www.google.com/maps/embed/v1/view?key=AIzaSyBdjdsCuQpY4pxUzwYKLRaAIVchevRT42Q&center=' + location?.lat + ',' + location?.lng + '&zoom=18'"
+        allowfullscreen>
+      </iframe>
       
-      <div class="ion-padding">
-        <h1>{{ message.subject }}</h1>
-        <p>
-          Nice lets see how live is this thing? yoyo ma {{position}}
-        </p>
-      </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
 import { useRoute } from 'vue-router';
-import { IonBackButton, IonButtons, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonNote, IonPage, IonToolbar } from '@ionic/vue';
+import { IonBackButton, IonButtons, IonContent, IonHeader, IonPage, IonToolbar } from '@ionic/vue';
 import { personCircle } from 'ionicons/icons';
 import { getMessage } from '../data/messages';
+import {getSingleMappedItem} from '../data/trainData';
 import { defineComponent } from 'vue';
 import { Geolocation } from '@capacitor/geolocation';
 const origPosition:any = {}
@@ -58,18 +51,15 @@ export default defineComponent({
   },
   setup() {
     const route = useRoute();
+    const location = getSingleMappedItem(route.params.id as string);
     const message = getMessage(parseInt(route.params.id as string, 10));
-    return { message }
+    return { message, location }
   },
   components: {
     IonBackButton,
     IonButtons,
     IonContent,
     IonHeader,
-    IonIcon,
-    IonItem,
-    IonLabel,
-    IonNote,
     IonPage,
     IonToolbar,
   },
@@ -77,6 +67,9 @@ export default defineComponent({
 </script>
 
 <style scoped>
+
+.mapouter{position:relative;text-align:right;height:500px;width:600px;}
+.gmap_canvas {overflow:hidden;background:none!important;height:500px;width:600px;}
 ion-item {
   --inner-padding-end: 0;
   --background: transparent;
