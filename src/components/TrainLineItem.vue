@@ -1,6 +1,9 @@
 <template>
   <ion-item v-if="trainLine" :routerLink="'/stopsForLine/' + trainLine.id" :detail="false" class="list-item">
-    <div slot="start"></div>
+    <div slot="start">
+      <ion-icon :icon="ellipse" size="large" :style="{color:trainLine.color}"></ion-icon>
+    </div>
+    
     <ion-label class="ion-text-wrap">
       <h2>
         {{ trainLine.friendlyName }}
@@ -10,16 +13,17 @@
 </template>
 
 <script lang="ts">
-import { IonItem, IonLabel } from '@ionic/vue';
-import { chevronForward } from 'ionicons/icons';
+import { IonItem, IonLabel, IonIcon } from '@ionic/vue';
+import { ellipse } from 'ionicons/icons';
 import { defineComponent, PropType } from 'vue';
-import {TrainLine} from '@/data/trainData'
+import { TrainLine } from '@/data/trainData'
 
 export default defineComponent({
   name: 'MessageListItem',
   components: {
     IonItem,
     IonLabel,
+    IonIcon
   },
   props: {
     trainLine: { type: Object as PropType<TrainLine>, }
@@ -31,7 +35,7 @@ export default defineComponent({
     }
   },
   data() {
-    return { chevronForward }
+    return { ellipse }
   }
 });
 </script>

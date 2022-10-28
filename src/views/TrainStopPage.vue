@@ -9,8 +9,9 @@
     </ion-header>
     
     <ion-content :fullscreen="true" v-if="location">
-      Distance: {{distance}}
+      Distance: {{distance * 0.621371}} mi
       <GoogleMap api-key="AIzaSyBdjdsCuQpY4pxUzwYKLRaAIVchevRT42Q" style="width: 100%; height: 100%" :center="location" :zoom="15">
+        <Marker :options="{ position: location }" />
         <Marker :options="{ position: position }" />
       </GoogleMap>
       
@@ -26,6 +27,8 @@ import {getSingleMappedItem} from '../data/trainData';
 import { defineComponent } from 'vue';
 import { Geolocation } from '@capacitor/geolocation';
 import { GoogleMap, Marker } from "vue3-google-map";
+import { Haptics } from '@capacitor/haptics';
+
 
 function distance(lat1:number, lon1:number, lat2:number, lon2:number) {
   var p = 0.017453292519943295;    // Math.PI / 180
@@ -47,16 +50,25 @@ export default defineComponent({
       distance: 0
     }
   },
-  created: async function(){
-    const route = useRoute();
-    let userCoords =  (await Geolocation.getCurrentPosition()).coords
-    const loc2 = this.$data.position = {lat: userCoords.latitude, lng: userCoords.longitude}
-    const loc1 = getSingleMappedItem(route.params.id as string);
-    if(loc1){
-      // acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon2-lon1))*6371
-      // const distance = Math.acos(Math.sin(loc1.lat)*Math.sin(loc2.lat)+Math.cos(loc1.lat)*Math.cos(loc2.lat)*Math.cos(loc2.lng-loc1.lng))*6371
-      this.$data.distance = distance(loc1.lat, loc1.lng, loc2.lat, loc2.lng)
+  methods: {
+    async checkPosition() {
+      
+      let userCoords =  (await Geolocation.getCurrentPosition()).coords
+      const loc2 = this.$data.position = {lat: userCoords.latitude, lng: userCoords.longitude}
+      const loc1 = getSingleMappedItem(this.$route.params.id as string);
+      if(loc1){
+        // acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon2-lon1))*6371
+        // const distance = Math.acos(Math.sin(loc1.lat)*Math.sin(loc2.lat)+Math.cos(loc1.lat)*Math.cos(loc2.lat)*Math.cos(loc2.lng-loc1.lng))*6371
+        this.$data.distance = distance(loc1.lat, loc1.lng, loc2.lat, loc2.lng)
+        if(this.$data.distance < 1.5) {
+          Haptics.vibrate()
+        }
+      }
     }
+  },
+  created: function(){
+    this.checkPosition()
+    setInterval(this.checkPosition, 10000);
   },
   setup() {
     const route = useRoute();

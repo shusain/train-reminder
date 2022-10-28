@@ -9,7 +9,8 @@ export type TrainStop = {
 export type TrainLine = {
   id: string;
   friendlyName: string;
-  trainStops: Array<TrainStop>
+  trainStops: Array<TrainStop>;
+  color: string;
 }
 
 const rawTrainData = {
@@ -1294,52 +1295,62 @@ export const trainLines: Array<TrainLine> = [
   {
     id: 'ada',
     friendlyName: 'Wheelchair Accessible',
-    trainStops: []
+    trainStops: [],
+    color:'#004A97'
   },
   {
     id: 'red',
     friendlyName: 'Red',
-    trainStops: []
+    trainStops: [],
+    color:'#C60C30'
   },
   {
     id: 'blue',
     friendlyName: 'Blue',
-    trainStops: []
+    trainStops: [],
+    color:'#00A1DE'
   },
   {
     id: 'g',
     friendlyName: 'Green',
-    trainStops: []
+    trainStops: [],
+    color:'#009B3A'
   },
   {
     id: 'brn',
     friendlyName: 'Brown',
-    trainStops: []
+    trainStops: [],
+    color:'#62361B'
   },
   {
     id: 'p',
     friendlyName: 'Purple',
-    trainStops: []
+    trainStops: [],
+    color:'#522398'
   },
   {
     id: 'pExp',
     friendlyName: 'Purple Express',
-    trainStops: []
+    trainStops: [],
+    color:'#522398'
   },
   {
     id: 'y',
     friendlyName: 'Yellow',
-    trainStops: []
+    trainStops: [],
+    color:'#F9E300'
   },
   {
     id: 'pnk',
     friendlyName: 'Pink',
-    trainStops: []
+    trainStops: [],
+    color:'#E27EA6'
   },
   {
     id: 'o',
     friendlyName: 'Orange',
-    trainStops: []
+    trainStops: [],
+    color:'#F9461C'
   }
 ]
 export const getTrainsByLine = (line:string):Array<TrainStop> => {
