@@ -1293,7 +1293,7 @@ const mapSingleDataItem = (datum: any):TrainStop => {
 export const trainLines: Array<TrainLine> = [
   {
     id: 'ada',
-    friendlyName: 'ADA',
+    friendlyName: 'Wheelchair Accessible',
     trainStops: []
   },
   {
@@ -1318,12 +1318,12 @@ export const trainLines: Array<TrainLine> = [
   },
   {
     id: 'p',
-    friendlyName: 'P',
+    friendlyName: 'Purple',
     trainStops: []
   },
   {
     id: 'pExp',
-    friendlyName: 'pExp',
+    friendlyName: 'Purple Express',
     trainStops: []
   },
   {
@@ -1333,7 +1333,7 @@ export const trainLines: Array<TrainLine> = [
   },
   {
     id: 'pnk',
-    friendlyName: 'PNK',
+    friendlyName: 'Pink',
     trainStops: []
   },
   {

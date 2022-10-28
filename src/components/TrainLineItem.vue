@@ -5,7 +5,6 @@
       <h2>
         {{ trainLine.friendlyName }}
       </h2>
-      <h3>{{ trainLine.id }}</h3>
     </ion-label>
   </ion-item>
 </template>
