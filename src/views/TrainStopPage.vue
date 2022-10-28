@@ -9,16 +9,10 @@
     </ion-header>
     
     <ion-content :fullscreen="true" v-if="location">
-      <!-- AIzaSyBdjdsCuQpY4pxUzwYKLRaAIVchevRT42Q -->
-      <iframe v-if="location && location.lat"
-        onload="this.width=screen.width;this.height=screen.height;"
-        width="450"
-        height="250"
-        frameborder="0" style="border:0"
-        referrerpolicy="no-referrer-when-downgrade"
-        :src="'https://www.google.com/maps/embed/v1/view?key=AIzaSyBdjdsCuQpY4pxUzwYKLRaAIVchevRT42Q&center=' + location?.lat + ',' + location?.lng + '&zoom=18'"
-        allowfullscreen>
-      </iframe>
+      Distance: {{distance}}
+      <GoogleMap api-key="AIzaSyBdjdsCuQpY4pxUzwYKLRaAIVchevRT42Q" style="width: 100%; height: 100%" :center="location" :zoom="15">
+        <Marker :options="{ position: position }" />
+      </GoogleMap>
       
     </ion-content>
   </ion-page>
@@ -31,22 +25,48 @@ import { personCircle } from 'ionicons/icons';
 import {getSingleMappedItem} from '../data/trainData';
 import { defineComponent } from 'vue';
 import { Geolocation } from '@capacitor/geolocation';
-const origPosition:any = {}
+import { GoogleMap, Marker } from "vue3-google-map";
+
+function distance(lat1:number, lon1:number, lat2:number, lon2:number) {
+  var p = 0.017453292519943295;    // Math.PI / 180
+  var c = Math.cos;
+  var a = 0.5 - c((lat2 - lat1) * p)/2 + 
+          c(lat1 * p) * c(lat2 * p) * 
+          (1 - c((lon2 - lon1) * p))/2;
+
+  return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
+}
+
+const origPosition:any = {lat:0,lng:0}
 export default defineComponent({
   name: 'ViewMessagePage',
   data() {
     return {
       personCircle,
-      position: origPosition
+      position: origPosition,
+      distance: 0
     }
   },
   created: async function(){
-      this.$data.position = (await Geolocation.getCurrentPosition()).coords.latitude
+    const route = useRoute();
+    let userCoords =  (await Geolocation.getCurrentPosition()).coords
+    const loc2 = this.$data.position = {lat: userCoords.latitude, lng: userCoords.longitude}
+    const loc1 = getSingleMappedItem(route.params.id as string);
+    if(loc1){
+      // acos(sin(lat1)*sin(lat2)+cos(lat1)*cos(lat2)*cos(lon2-lon1))*6371
+      // const distance = Math.acos(Math.sin(loc1.lat)*Math.sin(loc2.lat)+Math.cos(loc1.lat)*Math.cos(loc2.lat)*Math.cos(loc2.lng-loc1.lng))*6371
+      this.$data.distance = distance(loc1.lat, loc1.lng, loc2.lat, loc2.lng)
+    }
   },
   setup() {
     const route = useRoute();
     const location = getSingleMappedItem(route.params.id as string);
-    return { location }
+    if(location) {
+      return { location: {lat:location.lat, lng: location.lng, stopName: location.stopName} }
+    }
+    else {
+      return { location: {lat:0, lng:0, stopName: 'Unknown'} }
+    }
   },
   components: {
     IonBackButton,
@@ -55,6 +75,8 @@ export default defineComponent({
     IonHeader,
     IonPage,
     IonToolbar,
+    GoogleMap,
+    Marker
   },
 });
 </script>

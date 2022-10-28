@@ -1285,8 +1285,8 @@ const mapSingleDataItem = (datum: any):TrainStop => {
     id:id as string,
     stopName,
     stationName,
-    lat,
-    lng
+    lat: parseFloat(lat),
+    lng: parseFloat(lng)
   }
 }
 
