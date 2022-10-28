@@ -13,8 +13,12 @@ const routes: Array<RouteRecordRaw> = [
     component: HomePage
   },
   {
-    path: '/message/:id',
-    component: () => import('../views/ViewMessagePage.vue')
+    path: '/stopsForLine/:id',
+    component: () => import('../views/StopsForLine.vue')
+  },
+  {
+    path: '/stopView/:id',
+    component: () => import('../views/TrainStopPage.vue')
   }
 ]
 

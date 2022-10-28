@@ -1,4 +1,18 @@
-export const rawTrainData = {
+export type TrainStop = {
+  id: string;
+  stopName: string;
+  stationName: string;
+  lat: number;
+  lng: number;
+}
+
+export type TrainLine = {
+  id: string;
+  friendlyName: string;
+  trainStops: Array<TrainStop>
+}
+
+const rawTrainData = {
   "meta" : {
     "view" : {
       "id" : "8pix-ypme",
@@ -1260,26 +1274,114 @@ export const rawTrainData = {
  ]
 }
 
-
-const mapSingleDataItem = (datum: any) => {
+const mapSingleDataItem = (datum: any):TrainStop => {
   const [sid, id, positionInList, createdAt, createdMeta, updatedAt, updatedMeta,
     meta, stopId, directionId, stopName, stationName, stationDescriptiveName, mapId, ada, red, blue, g, brn, p, pExp, y, pnk, o,
     location, computedRegion, zipCode, communityAreas, censusTracts, wards ] = datum
     
     const [friendlyAddress, lat, lng] = location as any
 
-  return {id:id as string, stopName, stationName, lat, lng}
+  return {
+    id:id as string,
+    stopName,
+    stationName,
+    lat,
+    lng
+  }
 }
 
-export const getSingleMappedItem = (givenId: string) => {
+export const trainLines: Array<TrainLine> = [
+  {
+    id: 'ada',
+    friendlyName: 'ADA',
+    trainStops: []
+  },
+  {
+    id: 'red',
+    friendlyName: 'Red',
+    trainStops: []
+  },
+  {
+    id: 'blue',
+    friendlyName: 'Blue',
+    trainStops: []
+  },
+  {
+    id: 'g',
+    friendlyName: 'Green',
+    trainStops: []
+  },
+  {
+    id: 'brn',
+    friendlyName: 'Brown',
+    trainStops: []
+  },
+  {
+    id: 'p',
+    friendlyName: 'P',
+    trainStops: []
+  },
+  {
+    id: 'pExp',
+    friendlyName: 'pExp',
+    trainStops: []
+  },
+  {
+    id: 'y',
+    friendlyName: 'Yellow',
+    trainStops: []
+  },
+  {
+    id: 'pnk',
+    friendlyName: 'PNK',
+    trainStops: []
+  },
+  {
+    id: 'o',
+    friendlyName: 'Orange',
+    trainStops: []
+  }
+]
+export const getTrainsByLine = (line:string):Array<TrainStop> => {
   return rawTrainData.data.filter(datum=>{
     const [sid, id, positionInList, createdAt, createdMeta, updatedAt, updatedMeta,
       meta, stopId, directionId, stopName, stationName, stationDescriptiveName, mapId, ada, red, blue, g, brn, p, pExp, y, pnk, o,
       location, computedRegion, zipCode, communityAreas, censusTracts, wards ] = datum
-    return givenId == id
-  }).map(mapSingleDataItem).pop()
+
+    const curStationLines: {[key:string]:boolean} = {
+      'ada': ada as boolean,
+      'red': red as boolean,
+      'blue': blue as boolean,
+      'g': g as boolean,
+      'brn': brn as boolean,
+      'p': p as boolean,
+      'pExp': pExp as boolean,
+      'y': y as boolean,
+      'pnk': pnk as boolean,
+      'o': o as boolean
+    }
+
+    return curStationLines[line]
+  }).map(mapSingleDataItem)
 }
 
-export const getMappedTrainData = () => {
-  return rawTrainData.data.map(mapSingleDataItem)
+
+export const parseRawTrainData = ():Array<TrainStop> => {
+  const processed = rawTrainData.data.map(mapSingleDataItem)
+  processed.sort((a,b)=>a.stationName.localeCompare(b.stationName));
+  return processed;
 }
+
+
+export const getSingleMappedItem = (givenId: string):TrainStop|undefined => {
+  return trainStops.filter(trainStop => givenId == trainStop.id).pop()
+}
+
+export const mapTrainStopsToLines = () => {
+  trainLines.forEach(trainLine =>{
+    trainLine.trainStops = getTrainsByLine(trainLine.id)
+  })
+}
+
+const trainStops:Array<TrainStop> = parseRawTrainData()
+mapTrainStopsToLines()

@@ -8,7 +8,7 @@
       </ion-toolbar>
     </ion-header>
     
-    <ion-content :fullscreen="true" v-if="message">
+    <ion-content :fullscreen="true" v-if="location">
       <!-- AIzaSyBdjdsCuQpY4pxUzwYKLRaAIVchevRT42Q -->
       <iframe v-if="location && location.lat"
         onload="this.width=screen.width;this.height=screen.height;"
@@ -28,7 +28,6 @@
 import { useRoute } from 'vue-router';
 import { IonBackButton, IonButtons, IonContent, IonHeader, IonPage, IonToolbar } from '@ionic/vue';
 import { personCircle } from 'ionicons/icons';
-import { getMessage } from '../data/messages';
 import {getSingleMappedItem} from '../data/trainData';
 import { defineComponent } from 'vue';
 import { Geolocation } from '@capacitor/geolocation';
@@ -52,8 +51,7 @@ export default defineComponent({
   setup() {
     const route = useRoute();
     const location = getSingleMappedItem(route.params.id as string);
-    const message = getMessage(parseInt(route.params.id as string, 10));
-    return { message, location }
+    return { location }
   },
   components: {
     IonBackButton,
