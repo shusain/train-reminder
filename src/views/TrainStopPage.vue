@@ -52,7 +52,6 @@ export default defineComponent({
   },
   methods: {
     async checkPosition() {
-      
       let userCoords =  (await Geolocation.getCurrentPosition()).coords
       const loc2 = this.$data.position = {lat: userCoords.latitude, lng: userCoords.longitude}
       const loc1 = getSingleMappedItem(this.$route.params.id as string);
@@ -68,9 +67,12 @@ export default defineComponent({
   },
   created: function(){
     this.checkPosition()
-    setInterval(this.checkPosition, 10000);
+    this.polling = setInterval(this.checkPosition, 10000);
   },
-  setup() {
+  beforeUnmount() {
+    clearInterval(this.polling)
+  },
+  setup():any {
     const route = useRoute();
     const location = getSingleMappedItem(route.params.id as string);
     if(location) {
